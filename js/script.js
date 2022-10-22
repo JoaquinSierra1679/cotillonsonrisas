@@ -28,10 +28,10 @@ if (login()) {
                 alert('¡Acepta y elegi tu producto!');
                 break;
             case '2':
-                let Contacto = prompt('Aqui te dejamos nuestro Whatsapp: 2291504818');
+                alert('Aqui te dejamos nuestro Whatsapp: 2291504818');
                 break;
             case '3':
-                let Ubicación = prompt('Estamos en la calle 26 N1541');
+                alert('Estamos en la calle 26 N1541');
                 break;
             default:
                 alert('Elegiste una opción inválida');
