@@ -1,50 +1,97 @@
+function existeUsuario (usuario) {
+    
 
-alert("Para poder comprar en esta pagina tenes que ser de la ciudad de Miramar");
+    let encontrado = false;
 
-let respuesta = 'si';
+    for(const Jugador of listaJugadores) {
 
-function login() {
-    let ingresar = false;
-
-    for (let i = 1; i >= 0; i--) {
-        let resultado = prompt('¿Vivis en la ciudad de Miramar?. Tenes ' + (i + 1) + ' intentos.');
-        if (resultado == respuesta) {
-            alert ('Podes realizar una compra');
-            ingresar = true;
-            break;
-        } else {
-            alert('Al no ser de Miramar solo podras observar la pagina. Te quedan ' + i + ' intentos');
+        if(Jugador.usuario === usuario) {
+            encontrado = true; 
         }
-    } 
-    return ingresar;
+    }
+    
+    return encontrado;
 }
-if (login()) {
-    let opcion = prompt('Elegí una opción: \n1- Comprar. \n2- Contacto. \n3- Ubicación. \nPresioná X para finalizar.');
 
-    while (opcion != 'X' && opcion != 'x') {
 
-        switch (opcion) {
-            case '1':
-                alert('¡Acepta y elegi tu producto!');
-                break;
-            case '2':
-                alert('Aqui te dejamos nuestro Whatsapp: 2291504818');
-                break;
-            case '3':
-                alert('Estamos en la calle 26 N1541');
-                break;
-            default:
-                alert('Elegiste una opción inválida');
-                break;
+function usuarioTieneMonedas (nombredeUsuario, moneditas) {
+
+    // 
+    let usuarioEncontrado = buscarUsuario(nombredeUsuario);
+
+    return (parseInt(usuarioEncontrado.monedas) >= parseInt(moneditas));
+}
+
+function buscarUsuario (usuario) {
+
+    let usuarioEncontrado;
+
+    for(let i = 0; i < listaJugadores.length; i++) {
+
+        if(listaJugadores[i].usuario === usuario) {
+            usuarioEncontrado = listaJugadores[i];
+            break;
         }
-
-        opcion = prompt('Elegí una opción: \n1- Comprar. \n2 - Contacto. \n3 - Ubicación. \n Presioná X para finalizar.');
 
     }
 
-} else {
-    alert('No podra seguir navegando en esta página');
+    return usuarioEncontrado;
 }
 
+class Jugador {
 
-alert('Adiós');
+    constructor (usuario, monedas) {
+        this.usuario = usuario;
+        this.monedas = monedas;
+    }
+
+    descontarMonedas (monedas) {
+        this.monedas = this.monedas - monedas;
+    }
+
+    sumarMonedas (monedas) {
+        this.monedas = this.monedas + monedas;
+    }
+}
+//Array//
+const listaJugadores = [];
+
+listaJugadores.push(new Jugador("Lorena", 12000));
+listaJugadores.push(new Jugador("Joaquin", 3000));
+listaJugadores.push(new Jugador("Nicole", 20000));
+
+// Ingreso usuario de la persona DESDE la que quiero transferir
+let usuarioDesde = prompt("Ingrese el usuario de la persona desde la cual quiere transferir");
+
+while(!existeUsuario(usuarioDesde)) {
+    usuarioDesde = prompt("Usuario no encontrado, ingreselo nuevamente");
+}
+
+// Ingeso usuario de la persona a la cual quiero transferirle
+
+let usuarioHasta = prompt("Ingrese el usuario de la persona a la cual quiere transferir");
+
+while(!existeUsuario(usuarioHasta)) {
+    usuarioHasta = prompt("Usuario  no encontrado, ingreselo nuevamente");
+}
+
+// Monedas que quiero transferir
+
+let monedasATransferir = parseInt(prompt("Ingrese la cantidad de monedas a transferir"));
+
+while(monedasATransferir <= 0 || !usuarioTieneMonedas(usuarioDesde, monedasATransferir)) {
+    monedasATransferir = parseInt(prompt("Monto inválido, vuelva a ingresarlo"));
+}
+
+// Descontar y acreditar monedas de los usuarios
+
+const jugadorDesde = buscarUsuario(usuarioDesde);
+const jugadorHasta = buscarUsuario(usuarioHasta);
+
+jugadorDesde.descontarMonedas(monedasATransferir);
+jugadorHasta.sumarMonedas(monedasATransferir);
+
+console.log(jugadorDesde);
+console.log(jugadorHasta);
+
+console.log(listaJugadores);
