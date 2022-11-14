@@ -1,97 +1,78 @@
-function existeUsuario (usuario) {
-    
+class Producto {
 
-    let encontrado = false;
-
-    for(const Jugador of listaJugadores) {
-
-        if(Jugador.usuario === usuario) {
-            encontrado = true; 
-        }
-    }
-    
-    return encontrado;
-}
-
-
-function usuarioTieneMonedas (nombredeUsuario, moneditas) {
-
-    // 
-    let usuarioEncontrado = buscarUsuario(nombredeUsuario);
-
-    return (parseInt(usuarioEncontrado.monedas) >= parseInt(moneditas));
-}
-
-function buscarUsuario (usuario) {
-
-    let usuarioEncontrado;
-
-    for(let i = 0; i < listaJugadores.length; i++) {
-
-        if(listaJugadores[i].usuario === usuario) {
-            usuarioEncontrado = listaJugadores[i];
-            break;
-        }
-
+    constructor(nombre, categoria, precio, id) {
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.precio = parseInt(precio);
+        this.id = id;
     }
 
-    return usuarioEncontrado;
-}
-
-class Jugador {
-
-    constructor (usuario, monedas) {
-        this.usuario = usuario;
-        this.monedas = monedas;
+    asignarId(array) {
+        this.id = array.length;
     }
 
-    descontarMonedas (monedas) {
-        this.monedas = this.monedas - monedas;
+}
+
+const productos = [
+    new Producto('Antifaz Blanco', 'Fiesta', 600, 1),
+    new Producto('Coco Rallado', 'Alimento', 120, 2),
+    new Producto('Mantel', 'Decoracion', 1200, 3),
+    new Producto('Mascara Jason', 'Fiesta', 300, 4),
+    new Producto('Sangre Falsa', 'Fiesta', 400, 5),
+    new Producto('Globo Comun', 'Fiesta', 30, 6),
+]
+
+let continuar = true;
+
+while (continuar) {
+
+    let ingreso = prompt('Ingresa los datos del producto: nombre, categoria, precio, separados por una barra diagonal (/). Ingresa X para finalizar');
+
+    if (ingreso.toUpperCase() == 'X') {
+        continuar = false;
+        break;
     }
 
-    sumarMonedas (monedas) {
-        this.monedas = this.monedas + monedas;
+    const datos = ingreso.split('/');
+    console.log(datos);
+
+    const producto = new Producto(datos[0], datos[1], datos[2]);
+
+    productos.push(producto);
+    producto.asignarId(productos);
+    console.log(productos);
+
+}
+let criterio = prompt('Elegí el criterio deseado:\n1 - Nombre (A a Z) \n2 - Nombre (Z a A)\n3 - Mayor a Menor Precio');
+
+function ordenar(criterio, array) {
+    let arrayOrdenado = array.slice(0);
+
+    switch (criterio) {
+        case '1':
+            let nombreAscendente = arrayOrdenado.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            return nombreAscendente;
+        case '2':
+            return arrayOrdenado.sort((a, b) => b.nombre.localeCompare(a.nombre));
+
+        case '3':
+            return arrayOrdenado.sort((a, b) => b.precio - a.precio);
+        default:
+            alert('No es un criterio válido, te mostraremos el catálogo sin ordenar');
+            return arrayOrdenado;
     }
-}
-//Array//
-const listaJugadores = [];
 
-listaJugadores.push(new Jugador("Lorena", 12000));
-listaJugadores.push(new Jugador("Joaquin", 3000));
-listaJugadores.push(new Jugador("Nicole", 20000));
-
-// Ingreso usuario de la persona DESDE la que quiero transferir
-let usuarioDesde = prompt("Ingrese el usuario de la persona desde la cual quiere transferir");
-
-while(!existeUsuario(usuarioDesde)) {
-    usuarioDesde = prompt("Usuario no encontrado, ingreselo nuevamente");
 }
 
-// Ingeso usuario de la persona a la cual quiero transferirle
+function crearStringResultado(array) {
+    let info = '';
 
-let usuarioHasta = prompt("Ingrese el usuario de la persona a la cual quiere transferir");
+    array.forEach(elemento => {
+        info += 'Nombre: ' + elemento.nombre + '\nCategoria: ' + elemento.categoria + '\nPrecio: ' + elemento.precio + '\n\n'
+    });
 
-while(!existeUsuario(usuarioHasta)) {
-    usuarioHasta = prompt("Usuario  no encontrado, ingreselo nuevamente");
+    return info;
+
 }
 
-// Monedas que quiero transferir
-
-let monedasATransferir = parseInt(prompt("Ingrese la cantidad de monedas a transferir"));
-
-while(monedasATransferir <= 0 || !usuarioTieneMonedas(usuarioDesde, monedasATransferir)) {
-    monedasATransferir = parseInt(prompt("Monto inválido, vuelva a ingresarlo"));
-}
-
-// Descontar y acreditar monedas de los usuarios
-
-const jugadorDesde = buscarUsuario(usuarioDesde);
-const jugadorHasta = buscarUsuario(usuarioHasta);
-
-jugadorDesde.descontarMonedas(monedasATransferir);
-jugadorHasta.sumarMonedas(monedasATransferir);
-
-console.log(jugadorDesde);
-console.log(jugadorHasta);
-
-console.log(listaJugadores);
+alert(crearStringResultado(ordenar(criterio, productos)));
