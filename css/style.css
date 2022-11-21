@@ -1,4 +1,14 @@
-.titulo{
-    color: cyan;
-    background-color: black;
+.cardProducto{
+    width:600px;
+}
+
+.fakeAncla{
+    text-decoration: underline;
+    color: rgb(45, 13, 253)
+}
+
+.loginBar{
+    background-color: #b2faf9;
+    padding: 30px;
+    margin-bottom: 30px;
 }
